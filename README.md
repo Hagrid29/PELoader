@@ -22,11 +22,11 @@ Call LoadLibrary to load a legitimate DLL. overwrite DLL with payload
 
 Pros
 
-- payload mapped as `MEM_IMAGE` which looks legitimate for EXE or DLL
+- payload mapped as MEM_IMAGE which looks legitimate for EXE or DLL
 - impersonating a legitimate DLL
 - Sections mapped with original access rights (no RWX)
 
-![image-20220211001713988](./img/cdll.png)
+![cdll](img/cdll.PNG)
 
 
 
@@ -45,7 +45,7 @@ Cons
 
 - Not connected to the list of modules (check "Missing PEB module" in bellow Moneta's scanning result)
 
-![mdll](./img/mdll.PNG)
+![mdll](img/mdll.PNG)
 
 reference to @hasherezade's [PoC](https://github.com/hasherezade/module_overloading).
 
@@ -65,7 +65,7 @@ Cons
 
 - Detection if there is TxF activity monitoring
 
-![txf](./img/txf.PNG)
+![txf](img/txf.PNG)
 
 
 
@@ -83,7 +83,7 @@ Cron
 
 - Dummy file created on disk
 
-![ghost](.\img\ghost.PNG)reference to @hasherezade's [PoC](https://github.com/hasherezade/transacted_hollowing).
+![ghost](img/ghost.PNG)reference to @hasherezade's [PoC](https://github.com/hasherezade/transacted_hollowing).
 
 
 
@@ -100,7 +100,7 @@ Cons
 - Set memory page to RWX protection at initial stage
 - abnormal mapped EXE memory with RX protection
 
-![map](./img/map.PNG)
+![map](img/map.PNG)
 
 
 
@@ -117,7 +117,7 @@ Cons
 - staging shellcode to memory page with private type MEM_PRIVATE
 - abnormal private EXE memory with RX protection
 
-![priv](./img/priv.PNG)
+![priv](img/priv.PNG)
 
 
 
