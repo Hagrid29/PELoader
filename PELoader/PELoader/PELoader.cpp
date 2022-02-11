@@ -477,7 +477,7 @@ int phantom_hollower(LPCSTR payload_path, bool isGhost, const char temp_pathc[MA
 void printHelp() {
 	std::cout <<
 		"PELoader\n"
-		"More info: https://github.com/Hagrid29\n";
+		"More info: https://github.com/Hagrid29/PELoader/\n";
 	std::cout <<
 		"set hagrid=<PELoader argument>\n"
 		".\\PELoader.exe [binaray argument]\n"
