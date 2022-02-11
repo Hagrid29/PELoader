@@ -93,7 +93,7 @@ Call NtCreateSection to create memory section (RWX). Call NtMapViewOfSection  ma
 
 Pros
 
-- avoid staging shellcode to memory page with MEM_PRIVATE which is common in malware
+- Payload mapped as MEM_MAPPED to avoid MEM_PRIVATE which is common in malware
 
 Cons
 
