@@ -18,7 +18,7 @@ PELoader was tested on Windows 10 with Cortex XDR / SentinalOne / Windows Defend
 
 **Module Stomping (LoadLibrary)**
 
-Call LoadLibrary to load a legitimate DLL. overwrite DLL with payload
+Call LoadLibrary to load a legitimate DLL. Overwrite DLL with payload
 
 Pros
 
