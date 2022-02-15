@@ -14,7 +14,7 @@ Credits: most of my work was based on @hasherezade's [PoC](https://github.com/ha
 
 ## Testing
 
-PELoader was tested on Windows 10 with Cortex XDR / SentinalOne / Windows Defender, and Windows Defender detected Transacted Hollowing techniques. Characteristics of each techniques were tested with a memory scanner tool [Moneta](https://github.com/forrest-orr/moneta) from @forrest-orr.
+PELoader was tested on Windows 10 with Cortex XDR / SentinalOne / Windows Defender / CrowdStrike, and Windows Defender / CrowdStrike detected Transacted Hollowing techniques. Characteristics of each techniques were tested with a memory scanner tool [Moneta](https://github.com/forrest-orr/moneta) from @forrest-orr.
 
 **Module Stomping (LoadLibrary)**
 
