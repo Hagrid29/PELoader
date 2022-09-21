@@ -219,14 +219,14 @@ void encryptFile(const char* payloadPath, char* outputPath) {
 
 	unsigned char* lpszEncryptedString = nullptr;
 	DWORD dwEncryptedSize = EncryptString(payloadBuf, "Hagrid29", lpszEncryptedString, payloadSize);
-	if (sizeof(outputPath) == 0) {
+	char outputPath2[sizeof(payloadPath) + 5];
+	if (outputPath == nullptr) {
 		const char* suffix = ".enc";
-		outputPath[sizeof(payloadPath) + 5];
-		strcpy(outputPath, payloadPath);
-		strcat(outputPath, suffix);
+		strcpy(outputPath2, payloadPath);
+		strcat(outputPath2, suffix);
+		outputPath = outputPath2;
 	}
 	FILE* file = fopen(outputPath, "wb");
-	//fwrite(result, 1, payloadSize, file);
 	fwrite(lpszEncryptedString, 1, dwEncryptedSize, file);
 }
 
