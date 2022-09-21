@@ -548,7 +548,7 @@ int main(int argc, char* argv[], char* envp[])
 	}else if (strcmp(hagrid[0], "enc") == 0) {
 		printf("Encrypting File\n");
 		if (h == 2)
-			encryptFile(hagrid[1]);
+			encryptFile(hagrid[1], nullptr);
 		else if (h == 3)
 			encryptFile(hagrid[1], hagrid[2]);
 		else
