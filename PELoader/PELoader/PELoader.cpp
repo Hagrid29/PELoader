@@ -549,6 +549,8 @@ int main(int argc, char* argv[], char* envp[])
 		printf("Encrypting File\n");
 		if (h == 2)
 			encryptFile(hagrid[1]);
+		if (h == 3)
+			encryptFile(hagrid[1], hagrid[2]);
 		else
 			printHelp();
 	}else if (strcmp(hagrid[0], "map") == 0) {
