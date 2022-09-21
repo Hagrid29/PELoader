@@ -207,7 +207,7 @@ size_t getSizeOfImage(wchar_t* FilePath) {
 	return img_size;
 }
 
-void encryptFile(const char* payloadPath) {
+void encryptFile(const char* payloadPath, char* outputPath) {
 
 	size_t payloadSize = 0;
 
@@ -219,10 +219,12 @@ void encryptFile(const char* payloadPath) {
 
 	unsigned char* lpszEncryptedString = nullptr;
 	DWORD dwEncryptedSize = EncryptString(payloadBuf, "Hagrid29", lpszEncryptedString, payloadSize);
-	const char* suffix = ".enc";
-	char outputPath[sizeof(payloadPath) + 5];
-	strcpy(outputPath, payloadPath);
-	strcat(outputPath, suffix);
+	if (sizeof(outputPath) == 0) {
+		const char* suffix = ".enc";
+		outputPath[sizeof(payloadPath) + 5];
+		strcpy(outputPath, payloadPath);
+		strcat(outputPath, suffix);
+	}
 	FILE* file = fopen(outputPath, "wb");
 	//fwrite(result, 1, payloadSize, file);
 	fwrite(lpszEncryptedString, 1, dwEncryptedSize, file);
