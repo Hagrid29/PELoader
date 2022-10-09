@@ -4,9 +4,10 @@ PELoader implement various shellcode injection techniques, and use [libpeconv](h
 Following techniques were implemented:
 
 - Module Stomping (LoadLibrary)
-- Module Stomping (NtMapViewOfSection)
-- Transacted Hollowing
-- Ghostly Hollowing
+- Module Stomping (NtMapViewOfSection) ([PoC](https://github.com/hasherezade/module_overloading))
+- Transacted Hollowing ([PoC](https://github.com/hasherezade/transacted_hollowing))
+- Ghostly Hollowing ([PoC](https://github.com/hasherezade/transacted_hollowing#ghostly-hollowing))
+- Herpaderply Hollowing([PoC](https://github.com/Hagrid29/herpaderply_hollowing))
 - NtMapViewOfSection (RWX-RW-RX)
 - NtAllocateVirtualMemory (RW-RX)
 
